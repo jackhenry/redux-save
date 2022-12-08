@@ -14,14 +14,13 @@ import { Config, constants, NonVolatileStore } from './types'
 const itemIds = new Set<string>()
 let paused = false
 
-export const save = (itemId: string, reducer: Reducer, config?: Config) => {
+export const save = (itemId: string, reducer: Reducer) => {
   if (itemIds.has(itemId)) console.warn(constants.DUPLICATE_ID_WARNING + itemId)
   itemIds.add(itemId)
 
   const wrappedReducer: Reducer = (
     state,
-    action: Action & { [key: string]: any },
-    ...slices
+    action: Action & { [key: string]: any }
   ) => {
     switch (action.type) {
       case constants.HYDRATE_TYPE:
@@ -43,7 +42,9 @@ export const save = (itemId: string, reducer: Reducer, config?: Config) => {
 }
 
 const defaultConfig: Config = {
-  manualHydration: false
+  manualHydration: false,
+  manualPersistance: false,
+  blacklist: []
 }
 
 export const nonVolatileStore = (store: Store, config = defaultConfig) => {
@@ -52,7 +53,10 @@ export const nonVolatileStore = (store: Store, config = defaultConfig) => {
   }
 
   const dispatch = (action: AnyAction) => {
-    action[constants.PERSIST_VALUE] = !paused
+    const blacklist = config.blacklist || []
+    const manualPersistance = config.manualPersistance || false
+    action[constants.PERSIST_VALUE] =
+      !paused && !blacklist.includes(action.type) && !manualPersistance
     return store.dispatch(action)
   }
 

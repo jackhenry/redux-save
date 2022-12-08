@@ -1,15 +1,9 @@
-import {
-  AnyAction,
-  Dispatch,
-  Observable,
-  Reducer,
-  Store,
-  Unsubscribe
-} from 'redux'
+import { AnyAction } from 'redux'
 
 export type Config = {
   manualHydration?: boolean
-  [key: string]: any
+  manualPersistance?: boolean
+  blacklist?: string[]
 }
 
 export interface NonVolatileStore {
