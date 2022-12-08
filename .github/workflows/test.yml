@@ -24,3 +24,11 @@ jobs:
         run: yarn test
       - name: Compile
         run: yarn build
+      - uses: 'marvinpinto/action-automatic-releases@latest'
+        with:
+          repo_token: '${{ secrets.GITHUB_TOKEN }}'
+          automatic_release_tag: 'latest'
+          prerelease: true
+          title: 'Pre-release build'
+          files: |
+            *
