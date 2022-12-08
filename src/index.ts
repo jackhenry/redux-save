@@ -29,7 +29,6 @@ export const save = (itemId: string, reducer: Reducer) => {
         // return initial state defined by reducer
         return reducer(undefined, { type: null })
       default:
-        console.log(action)
         const result = reducer(state, action)
         if (action[constants.PERSIST_VALUE]) {
           storage.setItem(itemId, result)
